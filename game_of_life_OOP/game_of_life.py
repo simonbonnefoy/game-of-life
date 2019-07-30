@@ -68,6 +68,8 @@ class GameOfLife:
         '''Initializing the grid of the game of life'''
     
         #initialize the grid to a numpy array 
+    
+        #if the pulsar mode is set
         if self.model == 'pulsar':
             self.grid = np.zeros((17, 17))
             self.grid[2, 4:7] = 1
@@ -75,13 +77,14 @@ class GameOfLife:
             self.grid += self.grid.T
             self.grid += self.grid[:, ::-1]
             self.grid += self.grid[::-1, :]
-            
             self.size = 17
+
+        #default initialization
         else:
             self.grid = np.full((self.size,self.size),1)
             for i in range(0, len(self.grid)):
                 for k in range(0, len(self.grid)):
-                    if (i+k)%2==0:
+                    if (i+k)%3==0:
                         self.grid[i][k]=0
     
 
