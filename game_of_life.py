@@ -3,37 +3,10 @@
 import numpy as np
 import math
 import time
+import matplotlib.pyplot as plt  
+import matplotlib.animation as animation 
 ''' Script to launch the famous game of life'''
 
-def display_grid_of_life(grid):
-    output = format_grid_output(grid)
-    sep = ''
-    size = len(grid[1])
-    for i in range(0, len(grid[0])):
-        sep += '-'
-    print(sep)
-    print('\r%s\n' %output, end= '',  flush=True)
-    #print('Display grid of life')
-    #for x in range(0, len(grid)):
-    #    for y in range(0, len(grid)):
-    #        if y != len(grid) -1:
-    #            print(' '+ str(grid[x][y]) + ' ',end='', flush=True)
-    #        else:
-    #            print(' '+ str(grid[x][y]) + ' ')
-        
-
-def format_grid_output(grid):
-    output_of_life = ''
-    for x in range(0, len(grid)):
-        for y in range(0, len(grid)):
-            if y != len(grid) -1:
-                output_of_life += str(grid[x][y]) 
-            elif y == len(grid) -1 and x != len(grid) -1 :
-                output_of_life += str(grid[x][y]) + '\n'
-            else:
-                output_of_life += str(grid[x][y]) + '' 
-
-    return str(output_of_life)
 
 def check_neighbours_sum(grid, x, y):
     size = len(grid[1])
@@ -90,10 +63,6 @@ def cells_evolution(grid):
             
     return new_game
             
-
-
-
-
 def init_grid(size):
     '''Initializing the grid of the game of life'''
 
@@ -107,19 +76,28 @@ def init_grid(size):
     return grid
 
 
+def update(i):
+    global grid
+    new_grid = cells_evolution(grid)
+    im.set_array(new_grid)
+    grid = new_grid
+    return im
+
+
 if __name__=='__main__':
     print('playing the game of life!')
     #Set the size of the grid (square)
-    size = 15 
+    size = 17 
 
     #Initialize the grid of the game of life
-    grid  = init_grid(size)
+    global grid  
+    grid = init_grid(size)
 
-    while True:
-        try:
-            display_grid_of_life(grid)
-            grid = cells_evolution(grid)
-            time.sleep(1)
-        except KeyboardInterrupt:
-            print('Exiting the game of life!')
-            exit(0)
+    fig = plt.figure()
+    im = plt.imshow(grid)
+    try:
+        ani = animation.FuncAnimation(fig, update, interval=200)
+        plt.show()
+    except KeyboardInterrupt:
+        print('Exiting the game of life!')
+        exit(0)

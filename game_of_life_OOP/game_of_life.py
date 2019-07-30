@@ -1,41 +1,13 @@
-#!/usr/bin/env python
-
 import numpy as np
 import math
 import time
+import matplotlib.pyplot as plt  
+import matplotlib.animation as animation 
 
 class GameOfLife:
-    def __init__(self, size):
+    def __init__(self, size, model):
         self.size = size
-
-    def display_grid_of_life(self):
-        output = self.format_grid_output()
-        sep = ''
-        for i in range(0, self.size):
-            sep += '-'
-        print(sep)
-        print('\r%s\n' %output, end= '',  flush=True)
-        #print('Display grid of life')
-        #for x in range(0, len(grid)):
-        #    for y in range(0, len(grid)):
-        #        if y != len(grid) -1:
-        #            print(' '+ str(grid[x][y]) + ' ',end='', flush=True)
-        #        else:
-        #            print(' '+ str(grid[x][y]) + ' ')
-            
-    
-    def format_grid_output(self):
-        output_of_life = ''
-        for x in range(0, self.size):
-            for y in range(0, self.size):
-                if y != self.size -1:
-                    output_of_life += str(self.grid[x][y]) 
-                elif y == self.size -1 and x != self.size -1 :
-                    output_of_life += str(self.grid[x][y]) + '\n'
-                else:
-                    output_of_life += str(self.grid[x][y]) + '' 
-    
-        return str(output_of_life)
+        self.model = model
     
     def check_neighbours_sum(self, x, y):
         sum = 0
@@ -91,28 +63,42 @@ class GameOfLife:
                 
         return new_game
                 
-    
-    
-    
-    
+
     def init_grid(self):
         '''Initializing the grid of the game of life'''
     
         #initialize the grid to a numpy array 
-        self.grid = np.full((self.size,self.size),1)
-        for i in range(0, len(self.grid)):
-            for k in range(0, len(self.grid)):
-                if (i+k)%2==0:
-                    self.grid[i][k]=0
+        if self.model == 'pulsar':
+            self.grid = np.zeros((17, 17))
+            self.grid[2, 4:7] = 1
+            self.grid[4:7, 7] = 1
+            self.grid += self.grid.T
+            self.grid += self.grid[:, ::-1]
+            self.grid += self.grid[::-1, :]
+            
+            self.size = 17
+        else:
+            self.grid = np.full((self.size,self.size),1)
+            for i in range(0, len(self.grid)):
+                for k in range(0, len(self.grid)):
+                    if (i+k)%2==0:
+                        self.grid[i][k]=0
     
+
+    def update(self, i):
+
+        new_grid = self.cells_evolution()
+        self.im.set_array(new_grid)
+        self.grid = new_grid
+        return self.im
 
     def run(self):
 
-        while True:
-            try:
-                self.display_grid_of_life()
-                self.grid = self.cells_evolution()
-                time.sleep(1)
-            except KeyboardInterrupt:
-                print('Exiting the game of life!')
-                exit(0)
+        fig = plt.figure()
+        self.im = plt.imshow(self.grid)
+        try:
+            ani = animation.FuncAnimation(fig, self.update, interval=200)
+            plt.show()
+        except KeyboardInterrupt:
+            print('Exiting the game of life!')
+            exit(0)
