@@ -23,7 +23,6 @@ def display_grid_of_life(grid):
         
 
 def format_grid_output(grid):
-    #print('Display grid of life')
     output_of_life = ''
     for x in range(0, len(grid)):
         for y in range(0, len(grid)):
@@ -84,8 +83,8 @@ def cells_evolution(grid):
     depending on its state and the number of neighbours alive'''
 
     new_game = np.full((size,size),0)
-    for x in range(0, len(grid)):
-        for y in range(0, len(grid)):
+    for x in range(0, len(grid[0])):
+        for y in range(0, len(grid[0])):
             sum_neighbours = check_neighbours_sum(grid, x, y)
             new_game[x][y] = check_cell_lives(grid[x][y],sum_neighbours)
             
