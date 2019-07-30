@@ -3,8 +3,6 @@
 import numpy as np
 import math
 import time
-import functools
-
 ''' Script to launch the famous game of life'''
 
 def display_grid_of_life(grid):
