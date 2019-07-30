@@ -79,14 +79,10 @@ class GameOfLife:
             self.grid += self.grid[::-1, :]
             self.size = 17
 
-        #default initialization
+        #random initialization
         else:
-            self.grid = np.full((self.size,self.size),1)
-            for i in range(0, len(self.grid)):
-                for k in range(0, len(self.grid)):
-                    if (i+k)%3==0:
-                        self.grid[i][k]=0
-    
+            vals = [0,1]
+            self.grid = np.random.choice(vals, self.size*self.size, p=[0.8, 0.2]).reshape(self.size, self.size)
 
     def update(self, i):
 
